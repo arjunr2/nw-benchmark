@@ -1,4 +1,5 @@
 from common import deploy
+from itertools import combinations
 import paho.mqtt.client as paho
 
 sync_var = 0
@@ -19,7 +20,7 @@ def ping_pair(send_devs, recv_devs, argv):
 	# Send deploy
 	for send_dev in send_devs:
 		argvs = argv + [f"-t {send_dev}",  f"-f {num_interf}"]
-		deploy(send_dev, "wasm/tests/ping_send.wasm", argv=argvs)
+		deploy(send_dev, "wasm/tests/ping_send.wasm", argv=argvs, wait=False)
 	
 	# Wait for sync
 	while sync_var:
@@ -28,13 +29,16 @@ def ping_pair(send_devs, recv_devs, argv):
 	
 	
 def main():
-	for iterations in [1000]:
+	for iterations in [10000]:
 		for size in [64, 1024, 16384]:
 			for interval in [5000, 10000]:
-				send_devs = ["hc-35", "hc-31"]
-				recv_devs = ["hc-34", "hc-33"]
 				argv = [f"-i {iterations}", f"-m {interval}", f"-s {size}"]
-				ping_pair(send_devs, recv_devs, argv)
+
+				send_dev_list = ["hc-35", "hc-31", "hc-10"]
+				recv_dev_list = ["hc-34", "hc-33", "hc-14"]
+				for num in range(len(send_dev_list)):
+					idx = num + 1
+					ping_pair(send_dev_list[:idx], recv_dev_list[:idx], argv)
 
 
 if __name__ == '__main__':
