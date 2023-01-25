@@ -16,6 +16,7 @@ def plot(infile, outfile):
     plt.ylabel('Density')
     plt.xlabel('Transmission time (us)')
     plt.savefig(outfile)
+    plt.close()
 
 def main():
     res_dir = Path('nw_results')
