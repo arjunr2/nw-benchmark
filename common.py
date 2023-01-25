@@ -7,18 +7,24 @@ import paho.mqtt.client as paho
 '''
     Common helpers for benchmark creation
 '''
-def construct_deploy (cmd_list, devices, sync=False):
-    command_str = '; '.join(cmd_list)
-    sync_str = "--sync" if sync else ""
-    device_str = f"--devices {' '.join(devices)}" 
-    deploy_cmd = "python3 /home/hc/silverline/hc/manage.py "\
-                 "--config /home/hc/silverline/hc/config/hc.cfg "\
-                f"cmd {sync_str} {device_str} -x \"{command_str}\""
-    return deploy_cmd
+def construct_deploy (devices, path, argv):
+		if type(devices) is str:
+				device_str = devices
+		else:
+				device_str = ' '.join(devices)
+
+		deploy_cmd = "python3 /home/hc/silverline/libsilverline/run.py "\
+                 "--config /home/hc/silverline/config.json "\
+                f"--path {path} "\
+								f"--runtime {device_str} "
+		if argv:
+				deploy_cmd = deploy_cmd + "--argv {argv}".format(
+																argv = ' '.join([f"\"{x}\"" for x in argv]))
+		return deploy_cmd
 
 # Return stdout if wait, else return proc instance
-def deploy (cmd_list, devices, sync=False, wait=True):
-    deploy_cmd = construct_deploy (cmd_list, devices, sync)
+def deploy (devices, path, argv=[], wait=True):
+    deploy_cmd = construct_deploy (devices, path, argv)
     print(deploy_cmd)
     proc = subprocess.Popen (deploy_cmd,
                             shell=True,
