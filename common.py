@@ -2,7 +2,6 @@ import subprocess
 import time
 import shlex
 import sys
-import paho.mqtt.client as paho
 
 '''
     Common helpers for benchmark creation

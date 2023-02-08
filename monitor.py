@@ -3,7 +3,10 @@ import paho.mqtt.client as paho
 fields = {
     "$SYS/broker/clients/connected": "Connected",
     "$SYS/broker/load/messages/received/1min": "Msgs Received",
-    "$SYS/broker/heap/current": "Heap Size"
+    "$SYS/broker/publish/messages/dropped": "PUBS DROPPED",
+    "$SYS/broker/load/publish/dropped/1min": "LOAD PUBS DROPPED",
+    "$SYS/broker/heap/current": "Heap Size",
+    "$SYS/broker/heap/maximum": "Heap Max"
 }
 
 def on_sub_msg(client, userdata, msg):
@@ -11,7 +14,7 @@ def on_sub_msg(client, userdata, msg):
     payload = msg.payload
     prefix = fields[msg.topic]
     fval = float(msg.payload.decode())
-    print(f"{prefix} : {int(fval)}")
+    print(f"{prefix} : {msg.payload.decode()}")
 
 if __name__ == '__main__':
     client = paho.Client("monitor")
