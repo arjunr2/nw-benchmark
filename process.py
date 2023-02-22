@@ -3,21 +3,24 @@ import seaborn as sns
 import numpy as np
 from pathlib import Path
 
-limit = 20000
-tickwidth = 2000
+
+# Limit must be a multiple of binwidth and tickwidth
+limit = 10000
+tickwidth = 1000
 binwidth = 1000
 
 def plot(infile, outfile):
+    print("Processing ", infile)
     with open(infile, "r") as f:
         content = f.read()
         values = np.array([int(x) for x in content.split(',')[:-1]])
 
-    print(values)
+    print(np.sum(values > limit))
 
     fig, ax = plt.subplots()
 
     # Obtain bins and clipped values > limit
-    bins = np.arange(0, limit + binwidth, binwidth) 
+    bins = np.arange(0, limit + binwidth + 1, binwidth) 
     clipped_values = np.clip(values, bins[0], bins[-1])
 
     # Generate plot
@@ -29,7 +32,12 @@ def plot(infile, outfile):
 
     ticks = np.arange(0, limit + tickwidth, tickwidth)
     xlabels = (ticks//1000).astype(str);
-    xlabels[-1] = ">" + xlabels[-1]
+    
+    ticks = np.append(ticks, limit + tickwidth);
+    xlabels = np.append(xlabels, ">" + xlabels[-1])
+
+    #print(bins)
+    #print(ticks)
     
     plt.xticks(ticks)
     ax.set_xticklabels(xlabels)
