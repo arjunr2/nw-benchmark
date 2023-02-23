@@ -35,9 +35,10 @@ def plot(infile, outfile):
 
     ticks = np.arange(0, limit + tickwidth, tickwidth)
     xlabels = (ticks//1000).astype(str);
+    xlabels[-1] = xlabels[-1] + '>'
     
-    ticks = np.append(ticks, limit + tickwidth);
-    xlabels = np.append(xlabels, ">" + xlabels[-1])
+    #ticks = np.append(ticks, limit + tickwidth);
+    #xlabels = np.append(xlabels, ">" + xlabels[-1])
 
     #print(bins)
     #print(ticks)
