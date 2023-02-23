@@ -5,9 +5,9 @@ from pathlib import Path
 
 
 # Limit must be a multiple of binwidth and tickwidth
-limit = 10000
+limit = 5000
 tickwidth = 1000
-binwidth = 1000
+binwidth = 100
 
 def plot(infile, outfile):
     print("Processing ", infile)
@@ -15,7 +15,10 @@ def plot(infile, outfile):
         content = f.read()
         values = np.array([int(x) for x in content.split(',')[:-1]])
 
-    print(np.sum(values > limit))
+    print(f"Deadline misses (>{limit//1000}ms) = ", np.sum(values > limit))
+    print(f"Std Dev = " + str(round(np.std(values))) + " us")
+    print(f"Mean = " + str(round(np.mean(values))) + " us")
+    print("--------------")
 
     fig, ax = plt.subplots()
 
@@ -44,6 +47,7 @@ def plot(infile, outfile):
     plt.ylabel('Density')
     plt.xlabel('Transmission time (ms)')
 
+    #plt.plot(np.log(values))
     plt.savefig(outfile)
     plt.close()
 
