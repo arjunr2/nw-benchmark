@@ -15,12 +15,14 @@ def plot(infile, outfile):
         content = f.read()
         values = np.array([int(x) for x in content.split(',')[:-1]])
 
+    print(f"Num values: ", values.size)
     print(f"Deadline misses (>{limit//1000}ms) = ", np.sum(values > limit))
     print(f"Std Dev = " + str(round(np.std(values))) + " us")
     print(f"Mean = " + str(round(np.mean(values))) + " us")
     print("--------------")
 
-    fig, ax = plt.subplots()
+    fig, (ax, ax2) = plt.subplots(1, 2)
+    plt.rcParams['figure.figsize'] = [14, 6]
 
     # Obtain bins and clipped values > limit
     bins = np.arange(0, limit + binwidth + 1, binwidth) 
@@ -31,7 +33,7 @@ def plot(infile, outfile):
     sns.ecdfplot(clipped_values, color='orange', stat='proportion', linewidth=3, ax=ax)
 
     # Set plot labels and width
-    plt.xlim(right=limit+2*binwidth)
+    ax.set_xlim(right=limit+2*binwidth)
 
     ticks = np.arange(0, limit + tickwidth, tickwidth)
     xlabels = (ticks//1000).astype(str);
@@ -43,12 +45,15 @@ def plot(infile, outfile):
     #print(bins)
     #print(ticks)
     
-    plt.xticks(ticks)
+    ax.set_xticks(ticks)
     ax.set_xticklabels(xlabels)
-    plt.ylabel('Density')
-    plt.xlabel('Transmission time (ms)')
+    ax.set_ylabel('Density')
+    ax.set_xlabel('Transmission time (ms)')
 
-    #plt.plot(np.log(values))
+    ax2.set_ylabel('Transmission time (ms)')
+    ax2.set_xlabel('Packet #')
+    ax2.plot(values/1000)
+    #ax.plot(values)
     plt.savefig(outfile)
     plt.close()
 
