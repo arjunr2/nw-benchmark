@@ -26,9 +26,9 @@ On the machine running `ping_log`, create a directory named `nw_results`
 
 ## Example run
 The following setup runs the ping test between `hc-33` and `hc-34` for 3000 packets with a interval periodicity of 2 ms and payload size of 1kB.
-The topic-id `hc-33` must be consistent on all 
+The topic-id `newtopic` must be consistent on all deploy commands below
 ```
-<DEPLOY on hc-34> ping_recv.wasm hc-33 1024
-<DEPLOY on hc-33> ping_log.wasm -t hc-33 -m 2000 -i 3000 -s 1024
-<DEPLOY on hc-33> ping_send.wasm -t hc-33 -m 2000 -i 3000 -s 1024
+<DEPLOY on hc-34> ping_recv.wasm newtopic 1024
+<DEPLOY on hc-33> ping_log.wasm -t newtopic -m 2000 -i 3000 -s 1024
+<DEPLOY on hc-33> ping_send.wasm -t newtopic -m 2000 -i 3000 -s 1024
 ```
